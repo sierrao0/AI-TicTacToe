@@ -128,6 +128,7 @@ def play_game():
     letter, auto_letter= select_letter()
     #clean the board
     board=clean_board()
+    board=draw_board(board)
     #check if there are empty positions on the board
     while is_board_full(board) == False:
         try:
