@@ -1,14 +1,12 @@
-# -*- Nuha Alghamdi -*-
-# -*- nuhaalghamdi92@gmail.com -*-
-# -*- Oct 20 2019 -*-
-
 import random
+import os
+clear = lambda: os.system('cls')
 
-#to ask user to choose a letter
+# Letter choice function
 def select_letter():
     let=""
     auto_let=""
-    #ask user to select a letter (X or O)
+    # ask user to select a letter (X or O)
     while(let != "x" and let != "o"):
         let=input("Select X or O: ").replace(" ","").strip().lower()
         if let == "x":
@@ -17,21 +15,21 @@ def select_letter():
             auto_let="x"
     return let, auto_let
 
-#to prepare a clean board for the game
+# Board cleaning function
 def clean_board():
-    #an empty board for X and O values
+    #  an empty board for X and O values
     brd=[" " for x in range(10)]
     return brd
 
-#to check if board is full
+# Board checking function
 def is_board_full(board):
     return board.count(" ")==0
 
-#to insert a letter (X or O) in a specific position
+# To insert a letter (X or O) in a specific position
 def insert_letter(board,letter,pos):
     board[pos]=letter
 
-#to take computer moves
+# To take computer moves
 def computer_move(board,letter):
     computer_letter=letter
     possible_moves=[]
@@ -40,13 +38,13 @@ def computer_move(board,letter):
     available_center=[]
     position=-1
 
-    #all possible moves
+    # All possible moves
     for i in range(1,len(board)):
         if board[i] ==" ":
             possible_moves.append(i)
 
-    #if the position can make X or O wins!
-    #the computer will choose it to win or ruin a winning of the user
+    # If the position can make X or O wins!
+    # The computer will choose it to win or ruin a winning of the user
     for let in ["x","o"]:
         for i in possible_moves:
             board_copy=board[:]
@@ -55,55 +53,49 @@ def computer_move(board,letter):
                 position=i
 
 
-    #if computer cannot win or ruin a winning, then it will choose a random position starting
-    #with the corners, the center then the edges
+    # If computer cannot win or ruin a winning, then it will choose a random position starting
+    # With the corners, the center then the edges
     if position == -1:
         for i in range(len(board)):
-            #an empty index on the board
+            # An empty index on the board
             if board[i]==" ":
                 if i in [1,3,7,9]:
                     available_corners.append(i)
-                if i is 5:
+                if i == 5:
                     available_center.append(i)
                 if i in [2,4,6,8]:
                     available_edges.append(i)
-        #check corners first
+        # Check corners first
         if len(available_corners)>0:
-            print("it comes here")
-            #select a random position in the corners
+            # select a random position in the corners
             position=random.choice(available_corners)
-        #then check the availability of the center
+        # then check the availability of the center
         elif len(available_center)>0:
-            #select the center as the position
+            # select the center as the position
             position=available_center[0]
-        #lastly, check the availability of the edges
+        # lastly, check the availability of the edges
         elif len(available_edges)>0:
-            #select a random position in the edges
+            # select a random position in the edges
             position=random.choice(available_edges)
-    #fill the position with the letter
+    # fill the position with the letter
     board[position]=computer_letter
 
-#to draw the board
+# to draw the board
 def draw_board(board):
     board[0]=-1
-    #draw first row
-    print("   |   |   ")
+    # draw first row
+    print("\n")
     print(" "+board[1]+" | "+board[2]+" | "+board[3]+" ")
-    print("   |   |   ")
     print("-"*11)
-    #draw second row
-    print("   |   |   ")
+    # draw second row
     print(" "+board[4]+" | "+board[5]+" | "+board[6]+" ")
-    print("   |   |   ")
     print("-"*11)
-    #draw third row
-    print("   |   |   ")
+    # draw third row
     print(" "+board[7]+" | "+board[8]+" | "+board[9]+" ")
-    print("   |   |   ")
-    print("-"*11)
+    print("\n")
     return board
 
-#to check if a specific player is the winner
+# to check if a specific player is the winner
 def is_winner(board,letter):
     return (board[1] == letter and board[2] == letter and board[3] == letter) or \
     (board[4] == letter and board[5] == letter and board[6] == letter) or \
@@ -114,7 +106,7 @@ def is_winner(board,letter):
     (board[1] == letter and board[5] == letter and board[9] == letter) or \
     (board[3] == letter and board[5] == letter and board[7] == letter)
 
-#to repeat the game
+# to repeat the game
 def repeat_game():
 
     repeat=input("Play again? Press y for yes and n for no: ")
@@ -122,14 +114,14 @@ def repeat_game():
         repeat=input("PLEASE, press y for yes and n for no: ")
     return repeat
 
-#to play the game
+# to play the game
 def play_game():
 
     letter, auto_letter= select_letter()
-    #clean the board
+    # clean the board
     board=clean_board()
     board=draw_board(board)
-    #check if there are empty positions on the board
+    # check if there are empty positions on the board
     while is_board_full(board) == False:
         try:
             position=int(input("Select a position (1-9) to place an "+letter+" : " ))
@@ -137,19 +129,19 @@ def play_game():
         except:
             position=int(input("PLEASE enter position using only NUMBERS from 1-9: "))
 
-        #check if user selects out of range position
+        # check if user selects out of range position
         if position not in range(1,10):
             position=int(input("Please, choose another position to place an "+letter+" from 1 to 9 :"))
 
-        #check if user selects an occupied position by X or O
+        # check if user selects an occupied position by X or O
         if board[position] != " ":
-            position=int(input("Please, choose an empty position to place an "+letter+" from 1 to 9: "))
+            position=int(input("Please, choose an EMPTY position to place an "+letter+" from 1 to 9: "))
 
-        #put the letter in the selected position & computer plays then draw the board
+        # put the letter in the selected position & computer plays then draw the board
         insert_letter(board,letter,position)
-        #computer move
+        # computer move
         computer_move(board,auto_letter)
-        #draw the board
+        # draw the board
         board=draw_board(board)
 
         if is_winner(board,letter):
@@ -159,13 +151,15 @@ def play_game():
             print("Hard Luck! Computer won")
             return repeat_game()
 
-    #if " " not in board:
+    # if " " not in board:
     if is_board_full(board):
         print("Tie Game :)")
         return repeat_game()
 
-#Start the game
-print("Welcome to Tic Tac Toe.")
-repeat="y"
-while(repeat=="y"):
-    repeat=play_game()
+# Start the game
+if __name__ == "__main__":
+    clear()
+    print("Welcome to T-IA-c Toe. \n")
+    repeat="y"
+    while(repeat=="y"):
+        repeat=play_game()
