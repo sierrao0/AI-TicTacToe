@@ -1,6 +1,6 @@
 import random
 import os
-clear = lambda: os.system('cls')
+clear = lambda: os.system('clear')
 
 # Letter choice function
 def select_letter():
@@ -15,19 +15,32 @@ def select_letter():
             auto_let="x"
     return let, auto_let
 
-# Board cleaning function
+# Un estado en Triqui se puede representar mediante una matriz de 3x3 
+# que contiene 'X', 'O' o un espacio vacío. Cada disposición diferente 
+# de símbolos en el tablero es un estado único.
+
+# Board cleaning/creating function
 def clean_board():
     #  an empty board for X and O values
-    brd=[" " for x in range(10)]
+    brd=[[' ', ' ', ' '],
+         [' ', ' ', ' '],
+         [' ', ' ', ' ']]
     return brd
 
 # Board checking function
 def is_board_full(board):
-    return board.count(" ")==0
+    count = 0
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] != ' ':
+                count += 1
+    return count
 
 # To insert a letter (X or O) in a specific position
 def insert_letter(board,letter,pos):
-    board[pos]=letter
+    i = int(pos/3)
+    j = (pos % 3) - 1
+    board[i][j-1]=letter
 
 # To take computer moves
 def computer_move(board,letter):
@@ -82,29 +95,36 @@ def computer_move(board,letter):
 
 # to draw the board
 def draw_board(board):
-    board[0]=-1
     # draw first row
     print("\n")
-    print(" "+board[1]+" | "+board[2]+" | "+board[3]+" ")
+    print(" "+board[0][0]+" | "+board[0][1]+" | "+board[0][2]+" ")
     print("-"*11)
     # draw second row
-    print(" "+board[4]+" | "+board[5]+" | "+board[6]+" ")
+    print(" "+board[1][0]+" | "+board[1][1]+" | "+board[1][2]+" ")
     print("-"*11)
     # draw third row
-    print(" "+board[7]+" | "+board[8]+" | "+board[9]+" ")
+    print(" "+board[2][0]+" | "+board[2][1]+" | "+board[2][2]+" ")
     print("\n")
     return board
 
-# to check if a specific player is the winner
+# to check if a specific "player" is the winner
 def is_winner(board,letter):
-    return (board[1] == letter and board[2] == letter and board[3] == letter) or \
-    (board[4] == letter and board[5] == letter and board[6] == letter) or \
-    (board[7] == letter and board[8] == letter and board[9] == letter) or \
-    (board[1] == letter and board[4] == letter and board[7] == letter) or \
-    (board[2] == letter and board[5] == letter and board[8] == letter) or \
-    (board[3] == letter and board[6] == letter and board[9] == letter) or \
-    (board[1] == letter and board[5] == letter and board[9] == letter) or \
-    (board[3] == letter and board[5] == letter and board[7] == letter)
+    r# Check rows, columns, and diagonals for a win
+    for row in board:
+        if row[0] == row[1] == row[2] and row[0] == letter:
+            return True
+
+    for col in range(3):
+        if board[0][col] == board[1][col] == board[2][col] and board[0][col] == letter:
+            return True
+
+    if board[0][0] == board[1][1] == board[2][2] and board[0][0] == letter:
+        return True
+
+    if board[0][2] == board[1][1] == board[2][0] and board[0][2] == letter:
+        return True
+
+    return False
 
 # to repeat the game
 def repeat_game():
@@ -130,11 +150,13 @@ def play_game():
             position=int(input("PLEASE enter position using only NUMBERS from 1-9: "))
 
         # check if user selects out of range position
-        if position not in range(1,10):
+        while (position not in range(1,10)):
             position=int(input("Please, choose another position to place an "+letter+" from 1 to 9 :"))
 
         # check if user selects an occupied position by X or O
-        if board[position] != " ":
+        pos_i = int(position / 3)
+        pos_j = (position % 3) - 1
+        while (board[pos_i][pos_j] != " "):
             position=int(input("Please, choose an EMPTY position to place an "+letter+" from 1 to 9: "))
 
         # put the letter in the selected position & computer plays then draw the board
