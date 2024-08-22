@@ -21,7 +21,7 @@ def select_letter():
 
 # Board cleaning/creating function
 def clean_board():
-    #  an empty board for X and O values
+    #  An empty board for X and O values
     brd=[[' ', ' ', ' '],
          [' ', ' ', ' '],
          [' ', ' ', ' ']]
@@ -38,9 +38,9 @@ def is_board_full(board):
 
 # To insert a letter (X or O) in a specific position
 def insert_letter(board,letter,pos):
-    i = int(pos/3)
-    j = (pos % 3) - 1
-    board[i][j-1]=letter
+    i = int((pos-1)/3)
+    j = ((pos-1) % 3)
+    board[i][j] = letter
 
 # To take computer moves
 def computer_move(board,letter):
@@ -103,13 +103,12 @@ def draw_board(board):
     print(" "+board[1][0]+" | "+board[1][1]+" | "+board[1][2]+" ")
     print("-"*11)
     # draw third row
-    print(" "+board[2][0]+" | "+board[2][1]+" | "+board[2][2]+" ")
+    print(" "+board[2][0]+" | "+board[2][1]+" | "+board[2][2]+" ") 
     print("\n")
-    return board
 
 # to check if a specific "player" is the winner
-def is_winner(board,letter):
-    r# Check rows, columns, and diagonals for a win
+def is_winner(board, letter):
+    # Check rows, columns, and diagonals for a win
     for row in board:
         if row[0] == row[1] == row[2] and row[0] == letter:
             return True
@@ -140,7 +139,7 @@ def play_game():
     letter, auto_letter= select_letter()
     # clean the board
     board=clean_board()
-    board=draw_board(board)
+    draw_board(board)
     # check if there are empty positions on the board
     while is_board_full(board) == False:
         try:
@@ -154,17 +153,19 @@ def play_game():
             position=int(input("Please, choose another position to place an "+letter+" from 1 to 9 :"))
 
         # check if user selects an occupied position by X or O
-        pos_i = int(position / 3)
-        pos_j = (position % 3) - 1
+        pos_i = int((position-1)/3)
+        pos_j = ((position-1) % 3)
         while (board[pos_i][pos_j] != " "):
             position=int(input("Please, choose an EMPTY position to place an "+letter+" from 1 to 9: "))
 
         # put the letter in the selected position & computer plays then draw the board
         insert_letter(board,letter,position)
+        
         # computer move
         computer_move(board,auto_letter)
+        
         # draw the board
-        board=draw_board(board)
+        draw_board(board)
 
         if is_winner(board,letter):
             print("Congratulations! You Won.")
